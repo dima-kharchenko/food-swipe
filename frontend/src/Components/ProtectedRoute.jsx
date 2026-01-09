@@ -9,9 +9,7 @@ function ProtectedRoute({ children }){
     useEffect(() => {
         (async () => {
             const res = await checkAuth()
-            const status = res.logged_in
-            console.log(status)
-            setIsAuthenticated(status)
+            setIsAuthenticated(res.logged_in)
             setLoading(false)
         })()
     }, [])

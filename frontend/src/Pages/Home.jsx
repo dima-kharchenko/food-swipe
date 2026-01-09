@@ -1,6 +1,10 @@
+import Header from "../Components/Header.jsx"
+
 function Home() {
     return(
-        <h1 className="text-white">Home</h1>
+        <>
+        <Header />
+        </>
     )
 }
 

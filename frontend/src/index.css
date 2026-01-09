@@ -2,12 +2,12 @@
 
 @theme {
     /** Theme primary colors */
-    --color-primary-a0: #895bf5;
-    --color-primary-a10: #996df7;
-    --color-primary-a20: #a87ff8;
-    --color-primary-a30: #b691fa;
-    --color-primary-a40: #c3a3fb;
-    --color-primary-a50: #d0b5fc;
+    --color-primary-a0:  #b55d8a;
+    --color-primary-a10: #be6f96;
+    --color-primary-a20: #c781a3;
+    --color-primary-a30: #d093b0;
+    --color-primary-a40: #d8a5bc;
+    --color-primary-a50: #e1b6c9;
 
     /** Theme surface colors */
     --color-surface-a0: #121212;
