@@ -33,7 +33,7 @@ function Home() {
 
         {activeCategory && (
             <div
-                className="fixed inset-0 bg-black/40 flex items-center justify-center"
+                className="fixed inset-0 bg-black/50 flex items-center justify-center"
                 onClick={() => setActiveCategory(null)}
             >
                 <div

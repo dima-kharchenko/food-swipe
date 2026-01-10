@@ -15,12 +15,11 @@ class UserSerializer(serializers.ModelSerializer):
 class ItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item
-        fields = ["id", "name", "category"]
+        fields = ["id", "name", "category", "image"]
 
 
 class RatingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rating
-        fields = ["id", "user", "item", "score"]
-        read_only_fields = ["user"]
+        fields = ["id", "user", "item", "score", "created_at"]
 
