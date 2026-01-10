@@ -1,9 +1,10 @@
-from rest_framework import generics
+from rest_framework import generics, status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.contrib.auth import login, logout, authenticate
-from .serializers import UserSerializer
+from .serializers import UserSerializer, ItemSerializer, RatingSerializer
+from .models import Item, Rating
 
 class RegisterView(generics.CreateAPIView):
     serializer_class = UserSerializer
@@ -23,7 +24,7 @@ class LoginView(APIView):
         if user is not None:
             login(request, user)
             return Response({'success': True, "username": user.username})
-        return Response({'success': False}, status=400)
+        return Response({'success': False}, status=status.HTTP_400_BAD_REQUEST)
 
 class LogoutView(APIView):
     permission_classes = [IsAuthenticated]
@@ -40,3 +41,44 @@ class StatusView(APIView):
             return Response({"logged_in": True, "username": request.user.username})
         return Response({"logged_in": False})
 
+class ItemsView(generics.ListAPIView):
+    serializer_class = ItemSerializer
+    permission_classes = [IsAuthenticated] 
+    
+    def get_queryset(self):
+        category = self.kwargs.get('category')
+        queryset = Item.objects.filter(category=category)
+
+        return queryset
+
+class QuizItemsView(generics.ListAPIView):
+    serializer_class = ItemSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        category = self.kwargs.get('category')
+        rated_ids = Rating.objects.filter(user=self.request.user).values_list("item_id", flat=True)
+
+        queryset = Item.objects.filter(category=category).exclude(id__in=rated_ids)
+
+        return queryset
+
+class RateItemView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        item_id = request.data.get("id")
+        score = request.data.get("score")
+
+        if item_id is None or score is None:
+            return Response({'success': False}, status=status.HTTP_400_BAD_REQUEST)
+
+        rating, _ = Rating.objects.update_or_create(
+            user=request.user,
+            item_id=item_id,
+            defaults={"score": score},
+        )
+
+        return Response(RatingSerializer(rating).data, status=status.HTTP_200_OK)
+
+# TODO: StatsView 

@@ -5,7 +5,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 
 class Item(models.Model):
     name = models.CharField(max_length=100)
-    category = models.CharField(max_length=20, choices={"Products": "Products", "Dishes": "Dishes", "Drinks": "Drinks"})
+    category = models.CharField(max_length=20, choices={"products": "products", "dishes": "dishes", "drinks": "drinks"})
     image = models.ImageField(
         upload_to="items/",
         null=True,
