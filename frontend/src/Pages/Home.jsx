@@ -1,9 +1,11 @@
 import { useState } from "react"
+import { useNavigate } from "react-router";
 import Header from "../Components/Header.jsx"
 
 
 function Home() {
     const [activeCategory, setActiveCategory] = useState(null)
+    const navigate = useNavigate()
 
     return(
         <>
@@ -44,9 +46,17 @@ function Home() {
                         <p className="text-primary-a0/40 pr-1">0{["Products", "Dishes", "Drinks"].indexOf(activeCategory) + 1}</p>
                         <p className="text-primary-a0">{activeCategory}</p>
                     </div>
-                    {["Start Quiz", "Statistics", "Explore"].map((button, index) => (
-                    <button key={index} className="w-full py-2 mb-2 bg-surface-a20 rounded-lg text-surface-a50 font-medium cursor-pointer ring-1 ring-surface-a30 hover:bg-surface-a30 hover:text-white transition">
-                        {button} 
+                    {[
+                        {text: "Start Quiz", onClick: () => navigate(`/quiz/${activeCategory.toLowerCase()}`)}, 
+                        {text: "Statistics", onClick: () => navigate(`/stats/${activeCategory.toLowerCase()}`)}, 
+                        {text: "Share", onClick: () => null}
+                    ].map((button, index) => (
+                    <button 
+                        key={index} 
+                        className="w-full py-2 mb-2 bg-surface-a20 rounded-lg text-surface-a50 font-medium cursor-pointer border-1 border-surface-a30 hover:bg-surface-a30 hover:text-white transition"
+                        onClick={button.onClick}
+                    >
+                        {button.text} 
                     </button>
                     ))}
                 </div>
