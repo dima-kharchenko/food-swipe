@@ -73,7 +73,7 @@ function Quiz() {
                 {currentItem && <p className="text-primary-a0 text-3xl font-bold text-center mb-2">{category.charAt(0).toUpperCase() + category.slice(1).toLowerCase()}</p>}
                 <motion.div 
                     key={currentIndex}
-                    drag="x"
+                    drag={currentItem && "x"}
                     dragConstraints={{left: 0, right: 0}}
                     dragElastic={1}
                     onDragEnd={() => currentItem ? handleDragEnd(currentItem.id) : null}
@@ -85,7 +85,7 @@ function Quiz() {
                         opacity,
                         rotate,
                     }}
-                    className="bg-surface-a10 rounded-2xl overflow-hidden border-2 border-primary-a0 hover:cursor-grab active:cursor-grabbing mb-2"
+                    className={`bg-surface-a10 rounded-2xl overflow-hidden border-2 border-primary-a0 ${currentItem && 'hover:cursor-grab active:cursor-grabbing'} mb-2`}
                 >
                     {currentItem ? 
                     <>
@@ -112,6 +112,7 @@ function Quiz() {
                                 <i className="fa-solid fa-rotate-right mr-2"></i>
                                 Start Over
                             </button>
+                            {/* TODO: share button */}
                         </div>
                     </div>
                     }
