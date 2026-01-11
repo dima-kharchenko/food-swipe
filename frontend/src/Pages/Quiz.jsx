@@ -70,7 +70,7 @@ function Quiz() {
         <Header />
         <div className="min-h-[calc(100vh-48px)] mt-12 flex items-center justify-center">
             <div>
-                {currentItem && <p className="text-primary-a0 text-3xl font-bold text-center mb-2">{category.charAt(0).toUpperCase() + category.slice(1).toLowerCase()}</p>}
+                {currentItem && <p className="text-primary-a0 text-3xl font-bold text-center mb-6">{category.charAt(0).toUpperCase() + category.slice(1).toLowerCase()}</p>}
                 <motion.div 
                     key={currentIndex}
                     drag={currentItem && "x"}
@@ -85,12 +85,16 @@ function Quiz() {
                         opacity,
                         rotate,
                     }}
-                    className={`bg-surface-a10 rounded-2xl overflow-hidden border-2 border-primary-a0 ${currentItem && 'hover:cursor-grab active:cursor-grabbing'} mb-2`}
+                    className={`relative bg-surface-a10 rounded-2xl overflow-hidden border-1 border-surface-a30 ${currentItem && 'aspect-[2/3] hover:cursor-grab active:cursor-grabbing'} mb-2`}
                 >
                     {currentItem ? 
                     <>
-                    <img src={currentItem.image} alt={currentItem.name} className="w-full h-100 object-cover pointer-events-none"/>
-                    <p className="text-center text-primary-a0 text-2xl font-bold py-6">{currentItem.name}</p>
+                    <img src={currentItem.image} alt={currentItem.name} className="w-full h-full object-cover pointer-events-none"/>
+                    <div className="absolute inset-0 bg-gradient-to-t from-primary-a0/80 via-transparent">
+                        <div className="absolute bottom-0 px-4 py-3 flex w-full">
+                            <p className="text-white text-xl font-bold">{currentItem.name}</p>
+                        </div>
+                    </div>
                     </>
                     :
                     <div className="px-8 py-12 text-center">
