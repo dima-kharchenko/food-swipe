@@ -30,6 +30,10 @@ function Quiz() {
         })()
     }, [])
 
+    useEffect(() => {
+        x.set(0)
+    }, [currentIndex])
+
     const handlePrevIndex = () => {
         if (currentIndex > 0) {
             setCurrentIndex(p => p - 1)
@@ -43,13 +47,9 @@ function Quiz() {
         if (currentIndex < items.length - 1) {
             setCurrentIndex(p => p + 1)
         } else {
-            setCurrentIndex(items.length - 1)
+            setCurrentIndex(items.length)
         }
     }
-
-    useEffect(() => {
-        x.set(0)
-    }, [currentIndex])
 
     const handleDragEnd = () => {
         if (Math.abs(x.get()) > 100) {
@@ -65,7 +65,7 @@ function Quiz() {
     }
 
     return (
-        currentItem ? 
+        items ? 
         <>
         <Header />
         <div className="min-h-[calc(100vh-48px)] mt-12 flex items-center justify-center">
@@ -75,7 +75,7 @@ function Quiz() {
                     drag="x"
                     dragConstraints={{left: 0, right: 0}}
                     dragElastic={1}
-                    onDragEnd={() => handleDragEnd()}
+        onDragEnd={() => currentItem ? handleDragEnd() : null}
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.2 }}
@@ -86,8 +86,14 @@ function Quiz() {
                     }}
                     className="bg-surface-a10 rounded-2xl overflow-hidden border-2 border-surface-a20 hover:cursor-grab active:cursor-grabbing"
                 >
-                    <img src={currentItem.image} alt={currentItem.name} className="w-80 pointer-events-none"/>
-                    <p className="text-center text-primary-a0 text-2xl font-bold py-6 mb-2">{currentItem.name}</p>
+                    {currentItem ? 
+                    <>
+                    <img src={currentItem?.image} alt={currentItem?.name} className="w-80 pointer-events-none"/>
+                    <p className="text-center text-primary-a0 text-2xl font-bold py-6 mb-2">{currentItem?.name}</p>
+                    </>
+                    :
+                    <p className="text-center text-primary-a0 text-2xl font-bold px-4 py-2">No Items Left</p>
+                    }
                 </motion.div>
                 <div className="text-center">
                     <button
