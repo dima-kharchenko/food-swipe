@@ -1,0 +1,88 @@
+import { useParams } from 'react-router-dom'
+import { useState, useEffect } from "react"
+import { getStats } from "../api"
+import Header from "../Components/Header.jsx"
+
+function Stats() {
+    const { category } = useParams()
+    const [items, setItems] = useState([])
+    const [currentSort, setCurrentSort] = useState('Recent')
+    
+    useEffect(() => {
+        (async () => {
+            try {
+                const data = await getStats(category)
+                setItems(p => data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)))
+            } catch(err) {
+                console.log(err)
+            }
+        })()
+    }, [])
+    
+    const handleSort = (newSort) => {
+        setCurrentSort(p => newSort)
+        setItems(p => {
+            switch(newSort.toLowerCase()) {
+                case "recent":
+                    return p.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+                case "name":
+                    return p.sort((a, b) => a.name.localeCompare(b.name))
+                case "rating":
+                    return p.sort((a, b) => b.score - a.score)
+                default:
+                    return p 
+            }
+        })
+    }
+    
+    return (
+        <>
+        <Header />
+        <div className="min-h-[calc(100vh-48px)] mt-12 w-full px-4 md:w-2/3 mx-auto">
+            <div className="flex flex-col md:flex-row pt-10 gap-4 md:gap-0">
+                <div>
+                    <p className="text-primary-a0 text-3xl font-bold">{category.charAt(0).toUpperCase() + category.slice(1).toLowerCase()}</p>
+                    <p className="uppercase text-primary-a0/50 text-sm tracking-wider">Your Collection</p>
+                </div>
+                <div className="flex flex-wrap gap-3 md:gap-4 md:ml-auto md:my-auto">
+                    {[
+                        { count: items.length, label: 'rated' },
+                        { count: items.filter(i => i.score === 1).length, label: 'liked' },
+                        { count: items.filter(i => i.score === 0).length, label: 'neutral' },
+                        { count: items.filter(i => i.score === -1).length, label: 'disliked' },
+                    ].map((stat, index) => (
+                        <div key={index} className="flex gap-1">
+                            <p className="text-primary-a0 font-medium">{stat.count}</p>
+                            <p className="text-surface-a30 uppercase tracking-wider">{stat.label}</p>
+                        </div>
+                    ))} 
+                </div>
+            </div>
+            <div className="flex mt-6 gap-2 flex-wrap">
+                {["Recent", "Name", "Rating"].map((label, index) => (
+                    <button
+                        key={index}
+                        className={`px-3 py-1 rounded-lg cursor-pointer transition ${currentSort === label ? 'text-white bg-primary-a0' : 'text-surface-a50 hover:text-white bg-surface-a10 hover:bg-surface-a20 ring-1 ring-surface-a20'}`}
+                        onClick={() => handleSort(label)}
+                    >{label}</button>
+                ))}
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mt-6 pb-8">
+                {items.map((item, index) => (
+                    <div key={index} className="relative aspect-[2/3] rounded-lg overflow-hidden ring-2 ring-surface-a20 text-white/50 hover:text-white hover:ring-2 hover:ring-primary-a0 cursor-pointer transition">
+                        <img src={item.image} alt={item.name} className="w-full h-full object-cover"/>
+                        <div className="absolute inset-0 bg-gradient-to-t from-primary-a0/80 via-transparent hover:via-primary-a0/20 transition">
+                            <div className="absolute bottom-0 px-4 py-3 flex w-full">
+                                <p className="font-bold">{item.name}</p>
+                                <i className={`ml-auto my-auto ${["fa-solid fa-xmark", "fa-regular fa-face-meh", "fa-solid fa-heart"][item.score + 1]}`}></i>
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+        </>
+    )
+}
+
+export default Stats

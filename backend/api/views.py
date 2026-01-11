@@ -81,4 +81,21 @@ class RateItemView(APIView):
 
         return Response(RatingSerializer(rating).data, status=status.HTTP_200_OK)
 
-# TODO: StatsView 
+class StatsView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request, category):
+        ratings = Rating.objects.filter(
+            user=request.user,
+            item__category=category
+        ).select_related('item')
+        
+        data = [{
+            'id': r.item.id,
+            'name': r.item.name,
+            'image': request.build_absolute_uri(r.item.image.url), 
+            'score': r.score,
+            'created_at': r.created_at
+        } for r in ratings]
+        
+        return Response(data)

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path
-from api.views import RegisterView, LoginView, LogoutView, StatusView, ItemsView, QuizItemsView, RateItemView
+from api.views import RegisterView, LoginView, LogoutView, StatusView, ItemsView, QuizItemsView, RateItemView, StatsView 
 
 from django.conf import settings
 from django.conf.urls.static import static
@@ -15,6 +15,7 @@ urlpatterns = [
     path("api/items/quiz/<str:category>/", QuizItemsView.as_view(), name="quiz"),
     path("api/items/rate/", RateItemView.as_view(), name="rate_item"),
     path("api/items/<str:category>/", ItemsView.as_view(), name="items"),
+    path("api/stats/<str:category>/", StatsView.as_view(), name="stats"),
 ]
 
 if settings.DEBUG:

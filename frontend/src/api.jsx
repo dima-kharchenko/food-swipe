@@ -40,3 +40,8 @@ export const rateItem = async (id, score) => {
     const res = await api.post('items/rate/', { id, score })
     return res.data
 }
+
+export const getStats = async (category) => {
+    const res = await api.get(`stats/${category}`)
+    return res.data
+}

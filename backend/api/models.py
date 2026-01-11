@@ -17,8 +17,8 @@ class Rating(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
     score = models.SmallIntegerField(validators=[
-        MinValueValidator(-2),
-        MaxValueValidator(2),
+        MinValueValidator(-1),
+        MaxValueValidator(1),
     ])
     created_at = models.DateTimeField(auto_now_add=True)
 
