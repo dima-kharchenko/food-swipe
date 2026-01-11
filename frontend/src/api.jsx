@@ -1,10 +1,14 @@
 import axios from "axios"
+import Cookies from 'js-cookie'
 
 const API_URL = "/api/"
 
 const api = axios.create({
     baseURL: API_URL,
     withCredentials: true,
+    headers: {
+        'X-CSRFToken': Cookies.get('csrftoken')
+    }
 })
 
 export const signup = async (username, password) => {
@@ -29,5 +33,10 @@ export const checkAuth = async () => {
 
 export const getQuiz = async (category) => {
     const res = await api.get(`items/quiz/${category}`)
+    return res.data
+}
+
+export const rateItem = async (id, score) => {
+    const res = await api.post('items/rate/', { id, score })
     return res.data
 }
