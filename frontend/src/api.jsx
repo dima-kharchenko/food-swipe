@@ -61,6 +61,17 @@ export const rateItem = async (id, score) => {
 }
 
 export const getStats = async (category) => {
-    const res = await api.get(`stats/${category}`)
+    const res = await api.get(`stats/${category}/`)
+    return res.data
+}
+
+export const createStatsShare = async (category) => {
+    const res = await api.post(`stats/share/${category}/`)
+    return res.data
+}
+
+export const getStatsShare = async (share_id) => {
+    const res = await api.get(`stats/share/get/${share_id}/`)
+    console.log(res.data)
     return res.data
 }

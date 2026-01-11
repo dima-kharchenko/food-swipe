@@ -1,10 +1,13 @@
+import json
+import hashlib
 from rest_framework import generics, status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.contrib.auth import login, logout, authenticate
+from django.shortcuts import get_object_or_404
 from .serializers import UserSerializer, ItemSerializer, RatingSerializer
-from .models import Item, Rating
+from .models import Item, Rating, StatsShare
 
 class RegisterView(generics.CreateAPIView):
     serializer_class = UserSerializer
@@ -84,7 +87,9 @@ class RateItemView(APIView):
 class StatsView(APIView):
     permission_classes = [IsAuthenticated]
     
-    def get(self, request, category):
+    def get(self, request, *args, **kwargs):
+        category = self.kwargs.get("category")
+
         ratings = Rating.objects.filter(
             user=request.user,
             item__category=category
@@ -99,3 +104,50 @@ class StatsView(APIView):
         } for r in ratings]
         
         return Response(data)
+
+class CreateStatsShareView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        category = self.kwargs.get("category")
+
+        ratings = Rating.objects.filter(
+            user=request.user,
+            item__category=category
+        ).select_related('item')
+
+        snapshot = [{
+            'id': r.item.id,
+            'name': r.item.name,
+            'image': request.build_absolute_uri(r.item.image.url),
+            'score': r.score,
+            'created_at': r.created_at.isoformat()
+        } for r in ratings]
+
+        snapshot_json = json.dumps(snapshot, sort_keys=True)
+        snapshot_hash = hashlib.sha256(snapshot_json.encode()).hexdigest()
+
+        share, created = StatsShare.objects.get_or_create(
+            user=request.user,
+            category=category,
+            snapshot_hash=snapshot_hash,
+            defaults={"snapshot": snapshot},
+        )
+
+        return Response({
+            "share_url": f"/stats/share/{share.id}"
+        }, status=status.HTTP_200_OK)
+
+class SharedStatsView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, *args, **kwargs):
+        share_id = self.kwargs.get("share_id")
+        share = get_object_or_404(StatsShare, id=share_id)
+
+        return Response({
+            'category': share.category,
+            'created_at': share.created_at,
+            'data': share.snapshot
+        })
+

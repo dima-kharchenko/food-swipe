@@ -1,18 +1,21 @@
 import { useParams } from 'react-router-dom'
 import { useState, useEffect } from "react"
-import { getStats, createStatsShare } from "../api"
+import { getStatsShare } from "../api"
 import Header from "../Components/Header.jsx"
 
 function Stats() {
-    const { category } = useParams()
+    const { share_id } = useParams()
     const [items, setItems] = useState([])
     const [currentSort, setCurrentSort] = useState('Recent')
+    const [category, setCategory] = useState('')
     
     useEffect(() => {
         (async () => {
             try {
-                const data = await getStats(category)
-                setItems(p => data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)))
+                const res = await getStatsShare(share_id)
+                setCategory(res.category)
+                console.log(category)
+                setItems(p => res.data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)))
             } catch(err) {
                 console.log(err)
             }
@@ -35,19 +38,14 @@ function Stats() {
         })
     }
 
-    const handleShare = async () => {
-        const data = await createStatsShare(category)
-        navigator.clipboard.writeText(`${window.location.origin}${data['share_url']}`)
-    }
-    
     return (
         <>
         <Header />
         <div className="min-h-[calc(100vh-48px)] mt-12 w-full px-4 md:w-2/3 mx-auto">
             <div className="flex flex-col md:flex-row pt-10 gap-4 md:gap-0">
                 <div>
-                    <p className="text-primary-a0 text-3xl font-bold">{category.charAt(0).toUpperCase() + category.slice(1).toLowerCase()}</p>
-                    <p className="uppercase text-primary-a0/50 text-sm tracking-wider">Your Collection</p>
+                    <p className="text-primary-a0 text-3xl font-bold">Shared Collection</p>
+                    <p className="uppercase text-primary-a0/50 text-sm tracking-wider">{category}</p>
                 </div>
                 <div className="flex flex-wrap gap-3 md:gap-4 md:ml-auto md:my-auto">
                     {[
@@ -71,10 +69,6 @@ function Stats() {
                         onClick={() => handleSort(label)}
                     >{label}</button>
                 ))}
-                <button 
-                    className="text-surface-a50 hover:text-white bg-surface-a10 hover:bg-surface-a20 ring-1 ring-surface-a20 ml-auto px-3 py-1 rounded-lg cursor-pointer transition"
-                    onClick={() => handleShare()}
-                >Share</button>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mt-6 pb-8">
                 {items.map((item, index) => (

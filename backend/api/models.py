@@ -1,3 +1,4 @@
+import uuid
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
@@ -24,3 +25,14 @@ class Rating(models.Model):
 
     class Meta:
         unique_together = ("user", "item")
+
+class StatsShare(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    category = models.CharField(max_length=20, choices={"products": "products", "dishes": "dishes", "drinks": "drinks"})
+    snapshot = models.JSONField()
+    snapshot_hash = models.CharField(max_length=64, db_index=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("user", "category", "snapshot_hash")
