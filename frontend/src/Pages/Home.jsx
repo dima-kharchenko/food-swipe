@@ -44,7 +44,7 @@ function Home() {
                         <p className="text-primary-a0/40 pr-1">0{["Products", "Dishes", "Drinks"].indexOf(activeCategory) + 1}</p>
                         <p className="text-primary-a0">{activeCategory}</p>
                     </div>
-                    {["Start Quiz", "Explore", "Statistics"].map((button, index) => (
+                    {["Start Quiz", "Statistics", "Explore"].map((button, index) => (
                     <button key={index} className="w-full py-2 mb-2 bg-surface-a20 rounded-lg text-surface-a50 font-medium cursor-pointer ring-1 ring-surface-a30 hover:bg-surface-a30 hover:text-white transition">
                         {button} 
                     </button>
