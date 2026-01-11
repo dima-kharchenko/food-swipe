@@ -100,14 +100,14 @@ function Quiz() {
                         <div className="space-y-3">
                             <button 
                                 onClick={() => navigate('/')}
-                                className="w-full py-3 bg-surface-a20 rounded-lg text-surface-a50 font-medium border-1 border-surface-a30 hover:bg-surface-a30 hover:text-white cursor-pointer transition"
+                                className="w-full py-3 bg-surface-a20 rounded-lg text-surface-a50 font-medium border-1 border-surface-a30 hover:bg-surface-a30 active:text-white hover:text-white cursor-pointer transition"
                             >
                                 <i className="fa-solid fa-home mr-2"></i>
                                 Back to Home
                             </button>
                             <button 
                                 onClick={() => window.location.reload()}
-                                className="w-full py-3 bg-surface-a20 rounded-lg text-surface-a50 font-medium border-1 border-surface-a30 hover:bg-surface-a30 hover:text-white cursor-pointer transition"
+                                className="w-full py-3 bg-surface-a20 rounded-lg text-surface-a50 font-medium border-1 border-surface-a30 hover:bg-surface-a30 active:text-white hover:text-white cursor-pointer transition"
                             >
                                 <i className="fa-solid fa-rotate-right mr-2"></i>
                                 Start Over
@@ -137,7 +137,7 @@ function Quiz() {
                     ].map((b, index) => (
                     <button
                         key={index}
-                        className="text-white text-lg w-14 py-3 m-2 bg-surface-a10 rounded-md border-2 border-primary-a0 active:bg-surface-a20 hover:bg-surface-a20 transition"
+                        className="text-surface-a50 text-lg w-14 py-3 m-2 bg-surface-a10 rounded-md border-1 border-surface-a30 active:text-white hover:text-white active:bg-surface-a20 hover:bg-surface-a20 transition"
                         onClick={b.onClick}
                     ><i className={b.icon}></i></button> 
                     ))
