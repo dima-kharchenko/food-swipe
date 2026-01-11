@@ -70,7 +70,21 @@ function Quiz() {
         <Header />
         <div className="min-h-[calc(100vh-48px)] mt-12 flex items-center justify-center">
             <div>
-                {currentItem && <p className="text-primary-a0 text-3xl font-bold text-center mb-6">{category.charAt(0).toUpperCase() + category.slice(1).toLowerCase()}</p>}
+                {currentItem && (
+                    <div className="flex items-center justify-between mb-6 px-2">
+                        <div>
+                            <p className="text-primary-a0/40 text-sm uppercase tracking-wider">
+                                {category}
+                            </p>
+                            <p className="text-primary-a0 text-xl font-bold">
+                                {currentItem.name}
+                            </p>
+                        </div>
+                        <div className="text-primary-a0/50 text-2xl font-bold">
+                            {currentIndex + 1}/{items.length}
+                        </div>
+                    </div>
+                )}
                 <motion.div 
                     key={currentIndex}
                     drag={currentItem && "x"}
@@ -85,17 +99,10 @@ function Quiz() {
                         opacity,
                         rotate,
                     }}
-                    className={`relative bg-surface-a10 rounded-2xl overflow-hidden border-1 border-surface-a30 ${currentItem && 'aspect-[2/3] hover:cursor-grab active:cursor-grabbing'} mb-2`}
+                    className={`relative bg-surface-a10 rounded-2xl overflow-hidden border-1 border-surface-a30 ${currentItem && 'aspect-[2/3] hover:cursor-grab active:cursor-grabbing'} mb-8`}
                 >
                     {currentItem ? 
-                    <>
                     <img src={currentItem.image} alt={currentItem.name} className="w-full h-full object-cover pointer-events-none"/>
-                    <div className="absolute inset-0 bg-gradient-to-t from-primary-a0/80 via-transparent">
-                        <div className="absolute bottom-0 px-4 py-3 flex w-full">
-                            <p className="text-white text-xl font-bold">{currentItem.name}</p>
-                        </div>
-                    </div>
-                    </>
                     :
                     <div className="px-8 py-12 text-center">
                         <div className="text-primary-a0/50 text-5xl font-bold mb-4">✓</div>
@@ -110,21 +117,20 @@ function Quiz() {
                                 Back to Home
                             </button>
                             <button 
-                                onClick={() => window.location.reload()}
+                                onClick={() => navigate(`/stats/${category}`)}
                                 className="w-full py-3 bg-surface-a20 rounded-lg text-surface-a50 font-medium border-1 border-surface-a30 hover:bg-surface-a30 active:text-white hover:text-white cursor-pointer transition"
                             >
-                                <i className="fa-solid fa-rotate-right mr-2"></i>
-                                Start Over
+                                <i className="fa-solid fa-chart-simple mr-2"></i>
+                                View Stats
                             </button>
                             {/* TODO: share button */}
                         </div>
                     </div>
                     }
                 </motion.div>
-                {currentItem && <p className="text-primary-a0/50 text-2xl text-center font-bold mb-2">{`${currentIndex + 1}/${items.length}`}</p>}
-                <div className="text-center">
+                <div className="text-center justify-center flex gap-3">
                     {currentItem ? [
-                        { onClick: () => handlePrevIndex(), icon: "fa-solid fa-angle-left" },
+                        { onClick: () => handlePrevIndex(), icon: "fa-solid fa-angle-left", disabled: currentIndex === 0 },
                         { onClick: async () => {
                             handleNextIndex()
                             await rateItem(currentItem.id, -1) 
@@ -137,11 +143,12 @@ function Quiz() {
                             handleNextIndex()
                             await rateItem(currentItem.id, 1)
                         }, icon: "fa-solid fa-heart" },
-                        { onClick: () => handleNextIndex(), icon: "fa-solid fa-angle-right" }
+                        { onClick: () => handleNextIndex(), icon: "fa-solid fa-angle-right", disabled: currentIndex === items.length - 1 }
                     ].map((b, index) => (
                     <button
                         key={index}
-                        className="text-surface-a50 text-lg w-14 py-3 m-2 bg-surface-a10 rounded-md border-1 border-surface-a30 active:text-white hover:text-white active:bg-surface-a20 hover:bg-surface-a20 transition"
+                        disabled={b.disabled}
+                        className="text-surface-a50 text-lg w-14 py-3 bg-surface-a10 rounded-md border-1 border-surface-a30 cursor-pointer active:text-white hover:text-white active:bg-surface-a20 hover:bg-surface-a20 disabled:opacity-30 disabled:cursor-not-allowed transition"
                         onClick={b.onClick}
                     ><i className={b.icon}></i></button> 
                     ))
