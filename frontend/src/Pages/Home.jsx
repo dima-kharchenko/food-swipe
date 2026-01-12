@@ -1,11 +1,18 @@
 import { useState } from "react"
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router"
+import { createStatsShare } from "../api.jsx"
 import Header from "../Components/Header.jsx"
 
 
 function Home() {
     const [activeCategory, setActiveCategory] = useState(null)
     const navigate = useNavigate()
+
+    const handleShare = async () => {
+        const data = await createStatsShare(activeCategory)
+        navigator.clipboard.writeText(`${window.location.origin}${data['share_url']}`)
+    }
+
 
     return(
         <>
@@ -49,7 +56,7 @@ function Home() {
                     {[
                         {text: "Start Quiz", onClick: () => navigate(`/quiz/${activeCategory.toLowerCase()}`)}, 
                         {text: "Statistics", onClick: () => navigate(`/stats/${activeCategory.toLowerCase()}`)}, 
-                        {text: "Share", onClick: () => null}
+                        {text: "Share", onClick: () => handleShare()}
                     ].map((button, index) => (
                     <button 
                         key={index} 
