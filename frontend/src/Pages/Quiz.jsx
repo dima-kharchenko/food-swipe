@@ -99,7 +99,7 @@ function Quiz() {
                         opacity,
                         rotate,
                     }}
-                    className={`relative bg-surface-a10 rounded-2xl overflow-hidden border-1 border-surface-a30 ${currentItem && 'aspect-[2/3] hover:cursor-grab active:cursor-grabbing'} mb-8`}
+                    className={`relative bg-surface-a10 rounded-2xl overflow-hidden border-1 border-surface-a30 ${currentItem && 'w-90 aspect-[2/3] hover:cursor-grab active:cursor-grabbing'} mb-8`}
                 >
                     {currentItem ? 
                     <img src={currentItem.image} alt={currentItem.name} className="w-full h-full object-cover pointer-events-none"/>

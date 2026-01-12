@@ -98,7 +98,7 @@ class StatsView(APIView):
         data = [{
             'id': r.item.id,
             'name': r.item.name,
-            'image': r.item.image, 
+            'image': request.build_absolute_uri(r.item.image.url), 
             'score': r.score,
             'created_at': r.created_at
         } for r in ratings]
@@ -119,7 +119,7 @@ class CreateStatsShareView(APIView):
         snapshot = [{
             'id': r.item.id,
             'name': r.item.name,
-            'image': r.item.image,
+            'image': request.build_absolute_uri(r.item.image.url),
             'score': r.score,
             'created_at': r.created_at.isoformat()
         } for r in ratings]

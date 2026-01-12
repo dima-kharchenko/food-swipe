@@ -7,10 +7,11 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 class Item(models.Model):
     name = models.CharField(max_length=100)
     category = models.CharField(max_length=20, choices={"products": "products", "dishes": "dishes", "drinks": "drinks"})
-    image = models.URLField(
+    image = models.ImageField(
+        upload_to="items/",
         null=True,
         blank=True,
-        default="https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg"
+        default="items/no-image-available.svg"
     )
 
 class Rating(models.Model):
