@@ -98,7 +98,7 @@ class StatsView(APIView):
         data = [{
             'id': r.item.id,
             'name': r.item.name,
-            'image': request.build_absolute_uri(r.item.image.url), 
+            'image': r.item.image, 
             'score': r.score,
             'created_at': r.created_at
         } for r in ratings]
