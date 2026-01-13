@@ -23,7 +23,7 @@ function Quiz() {
         (async () => {
             try {
                 const data = await getQuiz(category)
-                setItems(p => data)
+                setItems(p => data.sort(() => Math.random() - 0.5))
             } catch(err) {
                 console.log(err)
             }
@@ -62,6 +62,18 @@ function Quiz() {
                 }
             })
         }    
+    }
+
+    const handleRate = async (score) => {
+        const direction = score === 0 ? (Math.random() > 0.5 ? 1 : -1) : score
+
+        animate(x, direction * 400, {
+            duration: 0.15,
+            onComplete: async () => {
+                handleNextIndex()
+                await rateItem(currentItem.id, score)
+            }
+        })
     }
 
     return (
@@ -131,18 +143,9 @@ function Quiz() {
                 <div className="text-center justify-center flex gap-3">
                     {currentItem ? [
                         { onClick: () => handlePrevIndex(), icon: "fa-solid fa-angle-left", disabled: currentIndex === 0 },
-                        { onClick: async () => {
-                            handleNextIndex()
-                            await rateItem(currentItem.id, -1) 
-                        }, icon: "fa-solid fa-xmark" },
-                        { onClick: async () => {
-                            handleNextIndex()     
-                            await rateItem(currentItem.id, 0)
-                        }, icon: "fa-regular fa-face-meh" },
-                        { onClick: async () => {
-                            handleNextIndex()
-                            await rateItem(currentItem.id, 1)
-                        }, icon: "fa-solid fa-heart" },
+                        { onClick: async () => handleRate(-1), icon: "fa-solid fa-xmark" },
+                        { onClick: async () => handleRate(0), icon: "fa-regular fa-face-meh" },
+                        { onClick: async () => handleRate(1), icon: "fa-solid fa-heart" },
                         { onClick: () => handleNextIndex(), icon: "fa-solid fa-angle-right", disabled: currentIndex === items.length - 1 }
                     ].map((b, index) => (
                     <button
