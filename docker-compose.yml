@@ -1,0 +1,8 @@
+services:
+  backend:
+    build: ./backend
+    volumes:
+      - ./backend/db.sqlite3:/app/db.sqlite3
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
