@@ -1,11 +1,14 @@
 FROM node:current-alpine AS build
 
 WORKDIR /app
-
-COPY package*.json .
- 
+COPY frontend/package*.json .
 RUN npm install
+COPY frontend .
+RUN npm run build
 
-COPY . .
+FROM nginx:stable-alpine AS production
 
-CMD ["npm", "run", "dev", "--", "--host"]
+COPY nginx/default.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /app/dist /usr/share/nginx/html
+
+CMD ["nginx", "-g", "daemon off;"]
