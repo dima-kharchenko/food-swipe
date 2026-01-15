@@ -13,6 +13,8 @@ services:
       dockerfile: ./frontend/Dockerfile
     ports:
       - "80:80"
+    volumes:
+      - ./backend/media:/var/www/media:ro
     depends_on:
       - "backend"
     restart: unless-stopped
