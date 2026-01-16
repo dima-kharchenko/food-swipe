@@ -111,7 +111,8 @@ function Quiz() {
                         opacity,
                         rotate,
                     }}
-                    className={`relative bg-surface-a10 rounded-2xl overflow-hidden border-1 border-surface-a30 ${currentItem && 'w-90 aspect-[2/3] hover:cursor-grab active:cursor-grabbing'} mb-8`}
+                    className={`relative bg-surface-a10 rounded-2xl overflow-hidden border border-surface-a30 mx-auto ${currentItem && 'w-70 sm:w-90 aspect-2/3 hover:cursor-grab active:cursor-grabbing'} mb-8`}
+
                 >
                     {currentItem ? 
                     <img src={currentItem.image} alt={currentItem.name} className="w-full h-full object-cover pointer-events-none"/>
@@ -123,14 +124,14 @@ function Quiz() {
                         <div className="space-y-3">
                             <button 
                                 onClick={() => navigate('/')}
-                                className="w-full py-3 bg-surface-a20 rounded-lg text-surface-a50 font-medium border-1 border-surface-a30 hover:bg-surface-a30 active:text-white hover:text-white cursor-pointer transition"
+                                className="w-full py-3 bg-surface-a20 rounded-lg text-surface-a50 font-medium border border-surface-a30 hover:bg-surface-a30 active:text-white hover:text-white cursor-pointer transition"
                             >
                                 <i className="fa-solid fa-home mr-2"></i>
                                 Back to Home
                             </button>
                             <button 
                                 onClick={() => navigate(`/stats/${category}`)}
-                                className="w-full py-3 bg-surface-a20 rounded-lg text-surface-a50 font-medium border-1 border-surface-a30 hover:bg-surface-a30 active:text-white hover:text-white cursor-pointer transition"
+                                className="w-full py-3 bg-surface-a20 rounded-lg text-surface-a50 font-medium border border-surface-a30 hover:bg-surface-a30 active:text-white hover:text-white cursor-pointer transition"
                             >
                                 <i className="fa-solid fa-chart-simple mr-2"></i>
                                 View Stats
@@ -151,7 +152,7 @@ function Quiz() {
                     <button
                         key={index}
                         disabled={b.disabled}
-                        className="text-surface-a50 text-lg w-14 py-3 bg-surface-a10 rounded-md border-1 border-surface-a30 cursor-pointer active:text-white hover:text-white active:bg-surface-a20 hover:bg-surface-a20 disabled:opacity-30 disabled:cursor-not-allowed transition"
+                        className="text-surface-a50 text-lg w-14 py-3 bg-surface-a10 rounded-md border border-surface-a30 cursor-pointer active:text-white hover:text-white active:bg-surface-a20 hover:bg-surface-a20 disabled:opacity-30 disabled:cursor-not-allowed transition"
                         onClick={b.onClick}
                     ><i className={b.icon}></i></button> 
                     ))
