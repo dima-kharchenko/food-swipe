@@ -7,6 +7,7 @@ function Stats() {
     const { category } = useParams()
     const [items, setItems] = useState([])
     const [currentSort, setCurrentSort] = useState('Recent')
+    const [copied, setCopied] = useState(false)
     
     useEffect(() => {
         (async () => {
@@ -57,6 +58,9 @@ function Stats() {
         } else {
           unsecuredCopyToClipboard(copyText);
         }
+
+        setCopied(true)
+        setTimeout(() => setCopied(false), 3000)
     }
 
     
@@ -92,15 +96,16 @@ function Stats() {
                     >{label}</button>
                 ))}
                 <button 
-                    className="text-surface-a50 hover:text-white bg-surface-a10 hover:bg-surface-a20 ring-1 ring-surface-a20 ml-auto px-3 py-1 rounded-lg cursor-pointer transition"
+                    type="button"
+                    className={`ml-auto px-3 py-1 rounded-lg cursor-pointer transition ${copied ? 'text-white bg-primary-a0' : 'text-surface-a50 hover:text-white bg-surface-a10 hover:bg-surface-a20 ring-1 ring-surface-a20'}`}
                     onClick={() => handleShare()}
-                >Share</button>
+                >{copied ? "Copied" : "Share"}</button>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mt-6 pb-8">
                 {items.map((item, index) => (
-                    <div key={index} className="relative aspect-[2/3] rounded-lg overflow-hidden ring-2 ring-surface-a20 text-white/50 hover:text-white hover:ring-2 hover:ring-primary-a0 cursor-pointer transition">
+                    <div key={index} className="relative aspect-2/3 rounded-lg overflow-hidden ring-2 ring-surface-a20 text-white/50 hover:text-white hover:ring-2 hover:ring-primary-a0 cursor-pointer transition">
                         <img src={item.image} alt={item.name} className="w-full h-full object-cover"/>
-                        <div className="absolute inset-0 bg-gradient-to-t from-primary-a0/80 via-transparent hover:via-primary-a0/20 transition">
+                        <div className="absolute inset-0 bg-linear-to-t from-primary-a0/80 via-transparent hover:via-primary-a0/20 transition">
                             <div className="absolute bottom-0 px-4 py-3 flex w-full">
                                 <p className="font-bold">{item.name}</p>
                                 <i className={`ml-auto my-auto ${["fa-solid fa-xmark", "fa-regular fa-face-meh", "fa-solid fa-heart"][item.score + 1]}`}></i>
