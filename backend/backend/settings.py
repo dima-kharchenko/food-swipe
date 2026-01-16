@@ -16,6 +16,8 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+BACKEND_URL = os.environ.get("BACKEND_URL", "http://192.168.1.13:83")
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
@@ -153,5 +155,5 @@ CORS_ALLOWED_ORIGINS = [
         "http://localhost",
 ]
 
-MEDIA_URL = "/media/"
+MEDIA_URL = f"{BACKEND_URL}/media/"
 MEDIA_ROOT = BASE_DIR / "media"

@@ -5,6 +5,8 @@ services:
       - ./backend/db.sqlite3:/app/db.sqlite3
     ports:
       - "8003:8000"
+    environment:
+      - BACKEND_URL=http://192.168.1.13:83
     restart: unless-stopped
 
   frontend:
