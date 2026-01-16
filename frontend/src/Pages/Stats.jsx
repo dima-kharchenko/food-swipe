@@ -35,24 +35,28 @@ function Stats() {
         })
     }
 
+    function unsecuredCopyToClipboard(text) {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      try {
+        document.execCommand('copy');
+      } catch (err) {
+        console.error('Unable to copy to clipboard', err);
+      }
+      document.body.removeChild(textArea);
+    }
+
     const handleShare = async () => {
         const data = await createStatsShare(category)
-        const text = `${window.location.origin}${data['share_url']}`
-
-        if (navigator.clipboard?.writeText) {
-            await navigator.clipboard.writeText(text)
-            return
+        const copyText = `${window.location.origin}${data['share_url']}`
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(copyText);
+        } else {
+          unsecuredCopyToClipboard(copyText);
         }
-
-        const textarea = document.createElement("textarea")
-        textarea.value = text
-        textarea.style.position = "fixed"
-        textarea.style.opacity = "0"
-        document.body.appendChild(textarea)
-        textarea.focus()
-        textarea.select()
-        document.execCommand("copy")
-        document.body.removeChild(textarea)
     }
 
     
