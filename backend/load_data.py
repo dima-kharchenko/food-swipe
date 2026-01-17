@@ -7,7 +7,7 @@ django.setup()
 
 from api.models import Item
 
-with open("./products.csv") as f:
+with open("./items.csv") as f:
     reader = csv.reader(f)
     next(reader, None)
 
@@ -15,5 +15,5 @@ with open("./products.csv") as f:
         Item.objects.get_or_create(
             name=row[0],
             image=row[1],
-            category="products",
+            category=row[2],
             )
