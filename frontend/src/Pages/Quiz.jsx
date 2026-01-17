@@ -52,7 +52,7 @@ function Quiz() {
     }
 
     const handleDragEnd = (id) => {
-        if (Math.abs(x.get()) > 100) {
+        if (Math.abs(x.get()) > 50) {
             const direction = x.get() > 0 ? 1 : -1
             animate(x, direction * 400, {
                 duration: 0.15,
@@ -80,7 +80,7 @@ function Quiz() {
         items ? 
         <>
         <Header />
-        <div className="min-h-[calc(100vh-48px)] mt-12 flex items-center justify-center">
+        <div className="min-h-[calc(100dvh-48px)] mt-12 flex items-center justify-center">
             <div>
                 {currentItem && (
                     <div className="flex items-center justify-between mb-6 px-2">
