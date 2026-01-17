@@ -2,12 +2,13 @@ import { useParams } from 'react-router-dom'
 import { useState, useEffect } from "react"
 import { getStats, createStatsShare } from "../api"
 import Header from "../Components/Header.jsx"
+import { useCopyToClipboard } from "./useCopyToClipboard.jsx"
 
 function Stats() {
     const { category } = useParams()
     const [items, setItems] = useState([])
     const [currentSort, setCurrentSort] = useState('Recent')
-    const [copied, setCopied] = useState(false)
+    const { copy, isCopied } = useCopyToClipboard()
     
     useEffect(() => {
         (async () => {
@@ -53,14 +54,7 @@ function Stats() {
     const handleShare = async () => {
         const data = await createStatsShare(category)
         const copyText = `${window.location.origin}${data['share_url']}`
-        if (navigator.clipboard) {
-          navigator.clipboard.writeText(copyText);
-        } else {
-          unsecuredCopyToClipboard(copyText);
-        }
-
-        setCopied(true)
-        setTimeout(() => setCopied(false), 3000)
+	copy(copyText)
     }
 
     
@@ -97,9 +91,9 @@ function Stats() {
                 ))}
                 <button 
                     type="button"
-                    className={`ml-auto px-3 py-1 rounded-lg cursor-pointer transition ${copied ? 'text-white bg-primary-a0' : 'text-surface-a50 hover:text-white bg-surface-a10 hover:bg-surface-a20 ring-1 ring-surface-a20'}`}
+                    className={`ml-auto px-3 py-1 rounded-lg cursor-pointer transition ${isCopied ? 'text-white bg-primary-a0' : 'text-surface-a50 hover:text-white bg-surface-a10 hover:bg-surface-a20 ring-1 ring-surface-a20'}`}
                     onClick={() => handleShare()}
-                >{copied ? "Copied" : "Share"}</button>
+                >{isCopied ? "Copied" : "Share"}</button>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mt-6 pb-8">
                 {items.map((item, index) => (
