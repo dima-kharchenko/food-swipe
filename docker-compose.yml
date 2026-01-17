@@ -5,6 +5,8 @@ services:
       - ./backend/db.sqlite3:/app/db.sqlite3
     ports:
       - "8003:8000"
+    environment:
+      DEBUG: 0 
     restart: unless-stopped
 
   frontend:
