@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom'
 import { useState, useEffect } from "react"
-import { getStats, createStatsShare } from "../api"
+import { getStats, createStatsShare, rateItem } from "../api"
 import Header from "../Components/Header.jsx"
 import { useCopyToClipboard } from "../Components/useCopyToClipboard.jsx"
 
@@ -43,6 +43,23 @@ function Stats() {
 	copy(copyText)
     }
 
+    const updateScore = async (id, newScore) => {
+        setItems(items =>
+            items.map(i =>
+                i.id === id ? { ...i, score: newScore } : i
+            )
+        )
+        await rateItem(id, newScore)
+    }
+
+    const nextScore = (score) => {
+        switch(score) {
+            case -1: return 0
+            case 0: return 1
+            case 1: return -1
+            default: return 0 
+        }
+    }
     
     return (
         <>
@@ -83,12 +100,36 @@ function Stats() {
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mt-6 pb-8">
                 {items.map((item, index) => (
-                    <div key={index} className="relative aspect-2/3 rounded-lg overflow-hidden ring-2 ring-surface-a20 text-white/50 hover:text-white hover:ring-2 hover:ring-primary-a0 cursor-pointer transition">
+                    <div key={index} className="relative aspect-2/3 rounded-lg overflow-hidden ring-2 ring-surface-a20 text-white/50 hover:text-white hover:ring-2 hover:ring-primary-a0 cursor-pointer transition group">
                         <img src={item.image} alt={item.name} className="w-full h-full object-cover"/>
                         <div className="absolute inset-0 bg-linear-to-t from-primary-a0/80 via-transparent hover:via-primary-a0/20 transition">
                             <div className="absolute bottom-0 px-4 py-3 flex w-full">
                                 <p className="font-bold">{item.name}</p>
-                                <i className={`ml-auto my-auto ${["fa-solid fa-xmark", "fa-regular fa-face-meh", "fa-solid fa-heart"][item.score + 1]}`}></i>
+                                <button 
+                                onClick={() => {
+                                    const newScore = nextScore(item.score)
+                                    updateScore(item.id, newScore)
+                                }}
+                                className="ml-auto my-auto z-10"
+                                >
+                                    <i className={`${["fa-solid fa-xmark", "fa-regular fa-face-meh", "fa-solid fa-heart"][item.score + 1]}`}></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+                            <div className="flex gap-3 bg-surface-a0 px-3 py-2 rounded-xl">
+                            {[-1, 0, 1].map(score => (
+                                <button
+                                    key={score}
+                                    onClick={(e) => {
+                                        e.stopPropagation()
+                                        updateScore(item.id, score)
+                                    }}
+                                    className={`text-lg cursor-pointer ${item.score === score ? "text-primary-a0" : "text-surface-a50 hover:text-white" }`}
+                                >
+                                    <i className={["fa-solid fa-xmark","fa-regular fa-face-meh","fa-solid fa-heart"][score + 1]} />
+                                </button>
+                            ))}
                             </div>
                         </div>
                     </div>
