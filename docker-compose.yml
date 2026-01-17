@@ -4,7 +4,7 @@ services:
     volumes:
       - ./backend/db.sqlite3:/app/db.sqlite3
     ports:
-      - "8003:8000"
+      - "8000:8000"
     restart: unless-stopped
 
   frontend:
@@ -12,7 +12,7 @@ services:
       context: .
       dockerfile: ./frontend/Dockerfile
     ports:
-      - "83:80"
+      - "80:80"
     volumes:
       - ./backend/media:/var/www/media:ro
     depends_on:

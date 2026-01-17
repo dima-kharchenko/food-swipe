@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom'
 import { useState, useEffect } from "react"
 import { getStats, createStatsShare } from "../api"
 import Header from "../Components/Header.jsx"
-import { useCopyToClipboard } from "./useCopyToClipboard.jsx"
+import { useCopyToClipboard } from "../Components/useCopyToClipboard.jsx"
 
 function Stats() {
     const { category } = useParams()
@@ -35,20 +35,6 @@ function Stats() {
                     return p 
             }
         })
-    }
-
-    function unsecuredCopyToClipboard(text) {
-      const textArea = document.createElement("textarea");
-      textArea.value = text;
-      document.body.appendChild(textArea);
-      textArea.focus();
-      textArea.select();
-      try {
-        document.execCommand('copy');
-      } catch (err) {
-        console.error('Unable to copy to clipboard', err);
-      }
-      document.body.removeChild(textArea);
     }
 
     const handleShare = async () => {
