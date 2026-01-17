@@ -2,15 +2,18 @@ import { useState } from "react"
 import { useNavigate } from "react-router"
 import { createStatsShare } from "../api.jsx"
 import Header from "../Components/Header.jsx"
+import { useCopyToClipboard } from "../Components/useCopyToClipboard.jsx"
 
 
 function Home() {
     const [activeCategory, setActiveCategory] = useState(null)
     const navigate = useNavigate()
+    const { copy, isCopied } = useCopyToClipboard()
 
     const handleShare = async () => {
         const data = await createStatsShare(activeCategory)
-        navigator.clipboard.writeText(`${window.location.origin}${data['share_url']}`)
+        const copyText = `${window.location.origin}${data['share_url']}`
+	    copy(copyText)
     }
 
 
@@ -60,7 +63,7 @@ function Home() {
                     ].map((button, index) => (
                     <button 
                         key={index} 
-                        className="w-full py-2 mb-2 bg-surface-a20 rounded-lg text-surface-a50 font-medium cursor-pointer border-1 border-surface-a30 hover:bg-surface-a30 hover:text-white transition"
+                        className={`w-full py-2 mb-2 rounded-lg font-medium cursor-pointer ${isCopied && button.text === "Share" ? "text-white bg-primary-a0" : "text-surface-a50 hover:text-white bg-surface-a20 hover:bg-surface-a30 ring ring-surface-a30"} transition `}
                         onClick={button.onClick}
                     >
                         {button.text} 
