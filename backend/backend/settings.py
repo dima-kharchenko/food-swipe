@@ -75,6 +75,7 @@ CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
     "http://localhost",
+    "http://192.168.1.13:83",
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -152,5 +153,5 @@ CORS_ALLOWED_ORIGINS = [
         "http://localhost",
 ]
 
-MEDIA_URL = "/media/"
+MEDIA_URL = f"/media/"
 MEDIA_ROOT = BASE_DIR / "media"
