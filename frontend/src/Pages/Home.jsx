@@ -11,7 +11,7 @@ function Home() {
     const { copy, isCopied } = useCopyToClipboard()
 
     const handleShare = async () => {
-        const data = await createStatsShare(activeCategory)
+        const data = await createStatsShare(activeCategory.toLowerCase())
         const copyText = `${window.location.origin}${data['share_url']}`
 	    copy(copyText)
     }
