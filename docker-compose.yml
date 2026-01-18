@@ -1,12 +1,21 @@
 services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: app_db
+      POSTGRES_USER: app_user
+      POSTGRES_PASSWORD: app_password
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
   backend:
     build: ./backend
-    volumes:
-      - ./backend/db.sqlite3:/app/db.sqlite3
     ports:
       - "8000:8000"
     environment:
       DEBUG: 0 
+    depends_on:
+      - db
     restart: unless-stopped
 
   frontend:
@@ -20,3 +29,6 @@ services:
     depends_on:
       - "backend"
     restart: unless-stopped
+
+volumes:
+  pgdata:
