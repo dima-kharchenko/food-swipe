@@ -85,7 +85,7 @@ function Stats() {
                 {items.map((item, index) => (
                     <div key={index} className="relative aspect-2/3 rounded-lg overflow-hidden ring-2 ring-surface-a20 text-white/50 hover:text-white hover:ring-2 hover:ring-primary-a0 cursor-pointer transition">
                         <img src={item.image} alt={item.name} className="w-full h-full object-cover"/>
-                        <div className="absolute inset-0 bg-linear-to-t from-primary-a0/80 via-transparent hover:via-primary-a0/20 transition">
+                        <div className="absolute inset-0 bg-linear-to-t from-surface-a0/60 via-transparent hover:via-primary-a0/20 transition">
                             <div className="absolute bottom-0 px-4 py-3 flex w-full">
                                 <p className="font-bold">{item.name}</p>
                                 <i className={`ml-auto my-auto ${["fa-solid fa-xmark", "fa-regular fa-face-meh", "fa-solid fa-heart"][item.score + 1]}`}></i>
