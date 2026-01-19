@@ -1,12 +1,12 @@
 import { useParams } from 'react-router-dom'
 import { useState, useEffect } from "react"
 import { getStatsShare } from "../api"
-import Header from "../Components/Header.jsx"
 
 function Stats() {
     const { share_id } = useParams()
     const [items, setItems] = useState([])
     const [currentSort, setCurrentSort] = useState('Recent')
+    const [reverseSort, setReverseSort] = useState(false)
     const [category, setCategory] = useState('')
     
     useEffect(() => {
@@ -22,24 +22,36 @@ function Stats() {
     }, [])
     
     const handleSort = (newSort) => {
-        setCurrentSort(p => newSort)
+        let newReverse = reverseSort
+        if (currentSort === newSort) {
+            newReverse = !reverseSort
+            setReverseSort(p => !p)
+        } else {
+            setCurrentSort(p => newSort)
+            newReverse = false 
+            setReverseSort(false)
+        }
         setItems(p => {
+            let res
             switch(newSort.toLowerCase()) {
                 case "recent":
-                    return p.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+                    res = p.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+                    break
                 case "name":
-                    return p.sort((a, b) => a.name.localeCompare(b.name))
+                    res = p.sort((a, b) => a.name.localeCompare(b.name))
+                    break
                 case "rating":
-                    return p.sort((a, b) => b.score - a.score)
+                    res =  p.sort((a, b) => b.score - a.score)
+                    break
                 default:
-                    return p 
+                    res = p 
             }
+            return newReverse ? res.reverse() : res
         })
     }
 
     return (
         <>
-        <Header />
         <div className="min-h-[calc(100vh-48px)] mt-12 w-full px-4 md:w-2/3 mx-auto">
             <div className="flex flex-col md:flex-row pt-10 gap-4 md:gap-0">
                 <div>
@@ -64,9 +76,9 @@ function Stats() {
                 {["Recent", "Name", "Rating"].map((label, index) => (
                     <button
                         key={index}
-                        className={`px-3 py-1 rounded-lg cursor-pointer transition ${currentSort === label ? 'text-white bg-primary-a0' : 'text-surface-a50 hover:text-white bg-surface-a10 hover:bg-surface-a20 ring-1 ring-surface-a20'}`}
+                        className={`px-3 py-1 rounded-lg cursor-pointer font-medium transition ${currentSort === label ? 'text-white bg-primary-a0' : 'text-surface-a50 hover:text-white bg-surface-a10 hover:bg-surface-a20 ring-1 ring-surface-a20'}`}
                         onClick={() => handleSort(label)}
-                    >{label}</button>
+                    >{label}{currentSort === label && (reverseSort ? <i className="fa-solid fa-angle-up ml-2"></i> : <i className="fa-solid fa-angle-down ml-2"></i>)}</button>
                 ))}
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mt-6 pb-8">

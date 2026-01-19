@@ -86,6 +86,5 @@ export const createStatsShare = async (category) => {
 
 export const getStatsShare = async (share_id) => {
     const res = await api.get(`stats/share/get/${share_id}/`)
-    console.log(res.data)
     return res.data
 }

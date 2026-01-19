@@ -8,6 +8,7 @@ function Stats() {
     const { category } = useParams()
     const [items, setItems] = useState([])
     const [currentSort, setCurrentSort] = useState('Recent')
+    const [reverseSort, setReverseSort] = useState(false)
     const { copy, isCopied } = useCopyToClipboard()
     
     useEffect(() => {
@@ -22,18 +23,31 @@ function Stats() {
     }, [])
     
     const handleSort = (newSort) => {
-        setCurrentSort(p => newSort)
+        let newReverse = reverseSort
+        if (currentSort === newSort) {
+            newReverse = !reverseSort
+            setReverseSort(p => !p)
+        } else {
+            setCurrentSort(p => newSort)
+            newReverse = false 
+            setReverseSort(false)
+        }
         setItems(p => {
+            let res
             switch(newSort.toLowerCase()) {
                 case "recent":
-                    return p.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+                    res = p.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+                    break
                 case "name":
-                    return p.sort((a, b) => a.name.localeCompare(b.name))
+                    res = p.sort((a, b) => a.name.localeCompare(b.name))
+                    break
                 case "rating":
-                    return p.sort((a, b) => b.score - a.score)
+                    res =  p.sort((a, b) => b.score - a.score)
+                    break
                 default:
-                    return p 
+                    res = p 
             }
+            return newReverse ? res.reverse() : res
         })
     }
 
@@ -88,9 +102,9 @@ function Stats() {
                 {["Recent", "Name", "Rating"].map((label, index) => (
                     <button
                         key={index}
-                        className={`px-3 py-1 rounded-lg cursor-pointer transition ${currentSort === label ? 'text-white bg-primary-a0' : 'text-surface-a50 hover:text-white bg-surface-a10 hover:bg-surface-a20 ring-1 ring-surface-a20'}`}
+                        className={`px-3 py-1 rounded-lg cursor-pointer font-medium transition ${currentSort === label ? 'text-white bg-primary-a0' : 'text-surface-a50 hover:text-white bg-surface-a10 hover:bg-surface-a20 ring-1 ring-surface-a20'}`}
                         onClick={() => handleSort(label)}
-                    >{label}</button>
+                    >{label}{currentSort === label && (reverseSort ? <i className="fa-solid fa-angle-up ml-2"></i> : <i className="fa-solid fa-angle-down ml-2"></i>)}</button>
                 ))}
                 <button 
                     type="button"
