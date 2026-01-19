@@ -67,6 +67,17 @@ class UpdateUserView(APIView):
 
         return Response({"success": True, "username": user.username}, status=status.HTTP_200_OK)
 
+class DeleteUserView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request):
+        user = request.user
+        user.delete()
+        logout(request)
+
+        return Response({"success": True}, status=status.HTTP_200_OK)
+    
+
 class ItemsView(generics.ListAPIView):
     serializer_class = ItemSerializer
     permission_classes = [IsAuthenticated] 

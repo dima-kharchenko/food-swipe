@@ -59,6 +59,11 @@ export const updateUser = async ({ username, password }) => {
     return res.data
 }
 
+export const deleteUser = async () => {
+    const res = await api.delete("auth/delete/")
+    return res.data
+}
+
 export const getQuiz = async (category) => {
     const res = await api.get(`items/quiz/${category}`)
     return res.data

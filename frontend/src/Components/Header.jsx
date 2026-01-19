@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from 'react'
-import { logout, updateUser } from '../api'
+import { logout, updateUser, deleteUser } from '../api'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from './ProtectedRoute'
 
@@ -77,6 +77,11 @@ function Header(){
         setPassword('')
     }
 
+    const handleUserDelete = async () => {
+        await deleteUser()
+        navigate('/signup')
+    }
+
     return(
         <>
         <div className="border-b bg-surface-a0 border-primary-a0 fixed top-0 w-full z-50 select-none">
@@ -95,7 +100,7 @@ function Header(){
                         ].map((button, index) => (
                         <button 
                             key={index} 
-                            className={`w-full px-2 py-1 rounded-lg font-medium cursor-pointer text-surface-a50 hover:text-white bg-surface-a20 hover:bg-surface-a30 ring ring-surface-a30 transition `}
+                            className={`w-full px-6 py-1 rounded-lg font-medium cursor-pointer text-surface-a50 hover:text-white bg-surface-a20 hover:bg-surface-a30 ring ring-surface-a30 transition `}
                             onClick={button.onClick}
                         >
                             {button.text} 
@@ -141,7 +146,8 @@ function Header(){
                         />
                     </form>
                     <button 
-                        className={`w-full py-2 rounded-lg font-medium cursor-pointer text-surface-a50 hover:text-white bg-surface-a20 hover:bg-surface-a30 ring ring-surface-a30 transition `}
+                        className="w-full py-2 rounded-lg font-medium cursor-pointer text-surface-a50 hover:text-white bg-surface-a20 hover:bg-red-500 ring ring-surface-a30 hover:ring-red-500 transition"
+                        onClick={() => handleUserDelete()}
                     >
                     Delete
                     </button>
