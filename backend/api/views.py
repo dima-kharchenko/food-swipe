@@ -56,7 +56,7 @@ class UpdateUserView(APIView):
 
         if username:
             if User.objects.filter(username=username).exclude(id=user.id).exists():
-                return Response({"error": "Psername already taken"}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({"error": "Username already taken"}, status=status.HTTP_400_BAD_REQUEST)
             user.username = username
 
         if password:
