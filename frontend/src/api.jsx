@@ -50,6 +50,20 @@ export const checkAuth = async () => {
     return res.data
 }
 
+export const updateUser = async ({ username, password }) => {
+    const query = {}
+    if (username) query.username = username
+    if (password) query.password = password 
+
+    const res = await api.put("auth/update/", query)
+    return res.data
+}
+
+export const deleteUser = async () => {
+    const res = await api.delete("auth/delete/")
+    return res.data
+}
+
 export const getQuiz = async (category) => {
     const res = await api.get(`items/quiz/${category}`)
     return res.data
@@ -72,6 +86,5 @@ export const createStatsShare = async (category) => {
 
 export const getStatsShare = async (share_id) => {
     const res = await api.get(`stats/share/get/${share_id}/`)
-    console.log(res.data)
     return res.data
 }

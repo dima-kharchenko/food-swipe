@@ -4,10 +4,12 @@ from rest_framework import generics, status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth import login, logout, authenticate, update_session_auth_hash
 from django.shortcuts import get_object_or_404
 from .serializers import UserSerializer, ItemSerializer, RatingSerializer
 from .models import Item, Rating, StatsShare
+from django.contrib.auth.models import User
+
 
 class RegisterView(generics.CreateAPIView):
     serializer_class = UserSerializer
@@ -43,6 +45,38 @@ class StatusView(APIView):
         if request.user.is_authenticated:
             return Response({"logged_in": True, "username": request.user.username})
         return Response({"logged_in": False})
+
+class UpdateUserView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request):
+        user = request.user
+        username = request.data.get("username")
+        password = request.data.get("password")
+
+        if username:
+            if User.objects.filter(username=username).exclude(id=user.id).exists():
+                return Response({"error": "Psername already taken"}, status=status.HTTP_400_BAD_REQUEST)
+            user.username = username
+
+        if password:
+            user.set_password(password)
+            update_session_auth_hash(request, user)
+
+        user.save()
+
+        return Response({"success": True, "username": user.username}, status=status.HTTP_200_OK)
+
+class DeleteUserView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def delete(self, request):
+        user = request.user
+        user.delete()
+        logout(request)
+
+        return Response({"success": True}, status=status.HTTP_200_OK)
+    
 
 class ItemsView(generics.ListAPIView):
     serializer_class = ItemSerializer
