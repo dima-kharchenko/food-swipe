@@ -9,6 +9,7 @@ from django.shortcuts import get_object_or_404
 from .serializers import UserSerializer, ItemSerializer, RatingSerializer
 from .models import Item, Rating, StatsShare
 from django.contrib.auth.models import User
+from django.db import transaction
 
 
 class RegisterView(generics.CreateAPIView):
@@ -72,8 +73,9 @@ class DeleteUserView(APIView):
 
     def delete(self, request):
         user = request.user
-        user.delete()
-        logout(request)
+        with transaction.atomic():
+            logout(request)
+            user.delete()
 
         return Response({"success": True}, status=status.HTTP_200_OK)
     
