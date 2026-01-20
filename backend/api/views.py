@@ -9,6 +9,7 @@ from django.shortcuts import get_object_or_404
 from .serializers import UserSerializer, ItemSerializer, RatingSerializer
 from .models import Item, Rating, StatsShare
 from django.contrib.auth.models import User
+from django.db import transaction
 
 
 class RegisterView(generics.CreateAPIView):
@@ -56,7 +57,7 @@ class UpdateUserView(APIView):
 
         if username:
             if User.objects.filter(username=username).exclude(id=user.id).exists():
-                return Response({"error": "Psername already taken"}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({"error": "Username already taken"}, status=status.HTTP_400_BAD_REQUEST)
             user.username = username
 
         if password:
@@ -72,8 +73,9 @@ class DeleteUserView(APIView):
 
     def delete(self, request):
         user = request.user
-        user.delete()
-        logout(request)
+        with transaction.atomic():
+            logout(request)
+            user.delete()
 
         return Response({"success": True}, status=status.HTTP_200_OK)
     

@@ -2,7 +2,6 @@ services:
   db:
     image: postgres:16
     environment:
-      USE_POSTGRES: 1
       POSTGRES_DB: app_db
       POSTGRES_USER: app_user
       POSTGRES_PASSWORD: app_password
@@ -16,6 +15,7 @@ services:
       - "8003:8000"
     environment:
       DEBUG: 0 
+      USE_POSTGRES: 1
     depends_on:
       - db
     restart: unless-stopped

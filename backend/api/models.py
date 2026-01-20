@@ -11,7 +11,7 @@ class Item(models.Model):
         upload_to="items/",
         null=True,
         blank=True,
-        default="items/no-image-available.svg"
+        default="no-image-available.svg"
     )
 
 class Rating(models.Model):
