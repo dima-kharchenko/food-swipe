@@ -16,6 +16,8 @@ services:
     environment:
       DEBUG: 0 
       USE_POSTGRES: 1
+    volumes:
+      - ./backend/media:/app/media:ro
     depends_on:
       - db
     restart: unless-stopped
